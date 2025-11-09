@@ -134,16 +134,6 @@ def compute_outsides(events: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def print_table_stays(stays: pd.DataFrame) -> None:
-    print("Durations of stay (Arrival -> Departure):")
-    print(stays)
-
-
-def print_table_outsides(outs: pd.DataFrame) -> None:
-    print("\nDurations outside (Departure -> next Arrival):")
-    print(outs)
-
-
 def main() -> None:
     import argparse
 
@@ -156,13 +146,7 @@ def main() -> None:
                         help="Input format: csv, tsv, or auto (default auto)",
                         choices=["csv", "tsv", "auto"], default="auto")
     args = parser.parse_args()
-
-    if args.input:
-        p = Path(args.input)
-    else:
-        p = Path(__file__).resolve().parents[1] / "travel_history.tsv"
-        if not p.exists():
-            p = Path.cwd() / "travel_history.tsv"
+    p = Path(args.input)
 
     if not p.exists():
         raise SystemExit(f"Input file not found: {p}")
@@ -176,8 +160,10 @@ def main() -> None:
     events = parse_events(p, sep=sep)
     stays = compute_stays(events)
     outs = compute_outsides(events)
-    print_table_stays(stays)
-    print_table_outsides(outs)
+    print("Durations of stay (Arrival -> Departure):")
+    print(stays)
+    print("Durations outside (Departure -> next Arrival):")
+    print(outs)
 
 
 if __name__ == "__main__":
